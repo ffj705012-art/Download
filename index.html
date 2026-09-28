@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargador CHAMO YT 💎</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+        body{background:#0a0a0a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .container{width:100%;max-width:450px;background:#111;border-radius:16px;padding:25px;box-shadow:0 0 30px #0f05}
+        h1{text-align:center;color:#0f8;font-size:22px;margin-bottom:5px}
+        .credits{text-align:center;color:#888;font-size:13px;margin-bottom:25px}
+        .input-box{width:100%;padding:14px;background:#222;border:2px solid #0f5;border-radius:10px;color:#fff;font-size:15px;margin-bottom:15px;outline:none}
+        .input-box:focus{border-color:#0f8;box-shadow:0 0 10px #0f55}
+        .btn{width:100%;padding:15px;background:linear-gradient(90deg,#0c6,#0f8);border:none;border-radius:10px;color:#000;font-weight:bold;font-size:17px;cursor:pointer;transition:0.3s;margin-top:5px}
+        .btn:hover{transform:scale(1.03);box-shadow:0 0 15px #0f5}
+        .btn:active{transform:scale(0.98)}
+        .preview{margin-top:20px;border-radius:10px;overflow:hidden;background:#000;display:none}
+        video{width:100%;display:block}
+        .status{margin-top:15px;text-align:center;font-size:14px;color:#0f5;min-height:40px;display:flex;align-items:center;justify-content:center}
+        .error{color:#f55}
+        .link-sample{margin-top:15px;font-size:12px;color:#666;word-break:break-all}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📥 DESCARGADOR DE VIDEOS</h1>
+        <p class="credits">Creado por CHAMO YT • @chamogamerjc</p>
+        
+        <input type="text" id="linkInput" class="input-box" placeholder="Pega aquí el enlace .mp4 de Catbox...">
+        
+        <button id="descargarBtn" class="btn">⬇️ DESCARGAR AHORA</button>
+        
+        <div class="status" id="status"></div>
+        
+        <div class="preview" id="preview">
+            <video id="videoPlayer" controls></video>
+        </div>
+
+        <p class="link-sample">Ejemplo: https://files.catbox.moe/a7zg1c.mp4</p>
+    </div>
+
+    <script>
+        const linkInput = document.getElementById('linkInput');
+        const descargarBtn = document.getElementById('descargarBtn');
+        const status = document.getElementById('status');
+        const preview = document.getElementById('preview');
+        const videoPlayer = document.getElementById('videoPlayer');
+
+        // Enlace por defecto
+        linkInput.value = 'https://files.catbox.moe/a7zg1c.mp4';
+
+        descargarBtn.addEventListener('click', async () => {
+            let url = linkInput.value.trim();
+            
+            if(!url) {
+                status.textContent = '⚠️ Pega un enlace primero';
+                status.className = 'status error';
+                return;
+            }
+
+            if(!url.includes('.mp4')) {
+                status.textContent = '⚠️ Solo enlaces .mp4 permitidos';
+                status.className = 'status error';
+                return;
+            }
+
+            status.textContent = '✅ Preparando descarga...';
+            status.className = 'status';
+
+            try {
+                // Mostrar vista previa
+                videoPlayer.src = url;
+                preview.style.display = 'block';
+
+                // Crear enlace de descarga
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.download = url.split('/').pop() || 'video-chamo-yt.mp4';
+                document.body.appendChild(a);
+                
+                // Intentar descarga directa
+                try {
+                    await videoPlayer.play();
+                } catch(e) {}
+                
+                a.click();
+                document.body.removeChild(a);
+
+                status.innerHTML = '✅ ¡Descarga iniciada! 📂<br>Si no baja solo, mantén pulsado el video ⬇️';
+                status.className = 'status';
+
+            } catch (err) {
+                status.innerHTML = 'ℹ️ Abre el enlace directo y guarda:<br><a href="'+url+'" target="_blank" style="color:#0ff">'+url+'</a>';
+                status.className = 'status';
+            }
+        });
+    </script>
+</body>
+</html>
